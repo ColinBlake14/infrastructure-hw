@@ -1,11 +1,22 @@
 name: Test PR
 on: [push, pull_request]
 jobs:
-  test:
+  unint-tests:
     runs-on: ubuntu-22.04
     steps:
       - name: Get repo code
         uses: actions/checkout@v3
+      - name: Install dependencies
+        run: npm ci
+      - name: Start unit-tests
+        run: npm test
+  e2e-tests:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Get repo code
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
       - name: Install dependencies
         run: npm ci
       #- name: Start app
@@ -14,6 +25,3 @@ jobs:
         run: npx playwright install --with-deps
       - name: Start e2e tests
         run: npm run e2e
-      - name: Start unit-tests
-        run: npm test
-      

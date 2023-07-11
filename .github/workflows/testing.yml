@@ -24,6 +24,6 @@ jobs:
       #- name: Start app
       #  run: npm start & npx wait-on http://localhost:3000
       - name: Download playwright browsers
-        run: npx playwright install --with-deps
+        run: npx playwright install --with-deps chromium
       - name: Start e2e tests
         run: npm run e2e

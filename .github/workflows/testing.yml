@@ -1,8 +1,8 @@
 name: Test PR
 on: 
-  push:
-    branches:
-      - 'main'
+  # push:
+  #   branches:
+  #     - 'main'
   pull_request:
 jobs:
   unint-tests:
@@ -14,7 +14,7 @@ jobs:
         run: npm ci
       - name: Start unit-tests
         run: |
-          for commit in $(git rev-list ${{ github.event.before}}..${{ github.sha}}); do
+          for commit in $(git rev-list ${{ github.base_ref }}..${{ github.head_ref }}); do
             git checkout $commit
             npm test
           done

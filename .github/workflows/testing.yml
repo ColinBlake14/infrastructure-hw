@@ -1,5 +1,9 @@
 name: Test PR
-on: [push, pull_request]
+on: 
+  push:
+    branches:
+      - 'main'
+  pull_request:
 jobs:
   unint-tests:
     runs-on: ubuntu-22.04

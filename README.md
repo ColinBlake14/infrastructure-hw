@@ -19,10 +19,10 @@ npm start
 
 ```sh
 # скачать браузеры
-npx playwright install
+npx playwright install 
 
 # запустить тесты
-npm run e2e
+npm run e2e 
 ```
 
 Как запустить модульные тесты:

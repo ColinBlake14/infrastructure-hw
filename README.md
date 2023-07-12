@@ -17,7 +17,7 @@ npm start
 
 Как запустить e2e тесты:
 
-```sh
+```sh 
 # скачать браузеры
 npx playwright install
 

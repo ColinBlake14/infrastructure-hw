@@ -80,11 +80,13 @@ jobs:
               issueNumber = result.data.number;
             }
 
+            console.log("${{ steps.changelog.outputs.changes }}");
+
             github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: issueNumber,
-              body: "Changelog: \n ${{ steps.changelog.outputs.changes }}"
+              body: "Changelog: \n${{ steps.changelog.outputs.changes }}"
             })
 
             github.rest.issues.createComment({

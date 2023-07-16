@@ -37,7 +37,7 @@ jobs:
               console.log('release label exists')
             }
             
-            const issueName = github.ref;
+            const issueName = ${{ github.ref }};
             console.log('ISSUE ', issueName);
 
             const issues = await github.request('GET /repos/{owner}/{repo}/issues?labels={labels}', {

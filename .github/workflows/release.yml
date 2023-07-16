@@ -82,7 +82,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: issueNumber,
-              body: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/5568305154`
+              body: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`
             })
   run_check:
     uses: ./.github/workflows/testing.yml
@@ -102,6 +102,8 @@ jobs:
           result-encoding: string
           retries: 3
           script: |
+            const issueName = context.payload.ref.replace(/refs\/tags\//, '');
+
             const issues = await github.request('GET /repos/{owner}/{repo}/issues?labels={labels}', {
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -123,6 +125,6 @@ jobs:
               state: 'closed'
             })
 
-             console.log('RUN_ID: ', context.payload.workflow_run.id);
+            console.log('RUN_ID: ', context.payload.workflow_run.id);
 
 

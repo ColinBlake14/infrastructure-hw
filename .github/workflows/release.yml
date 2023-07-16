@@ -70,7 +70,7 @@ jobs:
             let changeLog = `${{ steps.changelog.outputs.changelog }}`;
             console.log('oldCL: ', changeLog);
 
-            changeLog.replaceAll(';', '\n');
+            changeLog = changeLog.replaceAll(';', '\n');
             console.log('newCL: ', changeLog);
 
             github.rest.issues.createComment({

@@ -119,9 +119,9 @@ jobs:
               }
             }
 
+            console.log("ISSUE NUMBER: ", issueNumber);    
+
             await github.request('PATCH /repos/{owner}/{repo}/issues/${issueNumber}', {
-              owner: context.repo.owner,
-              repo: context.repo.repo,
               state: 'closed',
             })
 

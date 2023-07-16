@@ -1,8 +1,0 @@
-name: Demo WorkFlow
-on: [workflow_dispatch]
-jobs:
-  start:
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Print to console
-        run: echo Hellow World!

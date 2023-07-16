@@ -1,0 +1,72 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+'
+
+jobs:
+  release:
+    name: Run release
+    runs-on: ubuntu-20.04
+    permissions: write-all
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          echo "changelog=$(git log --pretty=format:'%h   %s'  ${{ github.ref }}..$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | grep -e 'v[0-9][0-9]*' | tail -2 | head -1) | head -1)" >> $GITHUB_OUTPUT
+
+      - name: Create an issue
+        uses: actions/github-script@v6
+        with:
+          result-encoding: string
+          retries: 3
+          script: |
+            try {
+              await github.rest.issues.createLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                name: "RELEASE"
+              })
+            } catch (e) {
+              console.log('release label exists')
+            }
+            
+            const issueName = github.ref;
+
+            const issues = await github.request('GET /repos/{owner}/{repo}/issues?labels={labels}', {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ["RELEASE"]
+            })
+
+            console.log(issues)
+            let issueExists = false;
+
+            for (const issue of issues.data) {
+              if (issue.title === issueName) {
+                issueExists = true;
+                break;
+              }
+            }
+
+            if (!issueExists) {
+              const result = await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: issueTitle,
+                labels: ["RELEASE"]
+              })
+            }
+
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: result.data.number,
+              body: "Changelog: \n${{ steps.changelog.outputs.changelog }}"
+            })

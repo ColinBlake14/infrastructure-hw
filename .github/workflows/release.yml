@@ -19,7 +19,7 @@ jobs:
       - name: Generate changelog
         id: changelog
         run: |
-          echo "changelog=$(git log --pretty=format:'%h   %s' $(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | grep -e 'v[0-9][0-9]*' | tail -2 | head -1)..${{ github.ref }}) | head -1)" >> $GITHUB_OUTPUT
+          echo "changelog=$(git log --pretty=format:'%h   %s' $(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | grep -e 'v[0-9][0-9]*' | tail -2 | head -1)..${{ github.ref }} | head -1)" >> $GITHUB_OUTPUT
 
       - name: Create an issue
         uses: actions/github-script@v6

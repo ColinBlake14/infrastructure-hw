@@ -1,7 +1,7 @@
 {
     "name": "unit-demo-cra",
     "version": "0.1.0",
-    "homepage": "https://github.com/ColinBlake14/infrastructure-hw",
+    "homepage": "https://colinblake14.github.io/infrastructure-hw/",
     "private": true,
     "dependencies": {
         "@testing-library/jest-dom": "^5.16.5",

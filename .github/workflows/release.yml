@@ -16,10 +16,23 @@ jobs:
         with:
           fetch-depth: 0
 
+      # - name: Generate changelog
+      #   id: changelog
+      #   run: |
+      #     echo "changelog=$(git log --pretty=format:'%h   %s' $(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | grep -e 'v[0-9][0-9]*' | tail -2 | head -1)..${{ github.ref }} | head -1)" >> $GITHUB_OUTPUT
+
+      - name: Get previous tag
+        id: prev_tag
+        run: |
+          echo "TAG=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | grep -e 'v[0-9][0-9]*' | tail -2 | head -1)..${{ github.ref }})" >> $GITHUB_OUTPUT
+
       - name: Generate changelog
         id: changelog
-        run: |
-          echo "changelog=$(git log --pretty=format:'%h   %s' $(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | grep -e 'v[0-9][0-9]*' | tail -2 | head -1)..${{ github.ref }} | head -1)" >> $GITHUB_OUTPUT
+        uses: requarks/changelog-action@v1
+        with:
+          token: ${{ github.token }}
+          fromTag: ${{ steps.prev_tag.outputs.TAG }}
+          toTag: ${{ github.ref_name }}
 
       - name: Create an issue
         uses: actions/github-script@v6
@@ -38,7 +51,6 @@ jobs:
             }
             
             const issueName = context.payload.ref.replace(/refs\/tags\//, '');
-            console.log('ISSUE ', issueName);
 
             const issues = await github.request('GET /repos/{owner}/{repo}/issues?labels={labels}', {
               owner: context.repo.owner,
@@ -46,7 +58,6 @@ jobs:
               labels: ["RELEASE"]
             })
 
-            console.log(issues)
             let issueExists = false;
             let issueNumber = 0;
 
@@ -73,10 +84,8 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: issueNumber,
-              body: "Changelog: \n${{ steps.changelog.outputs.changelog }}"
+              body: "Changelog: \n ${{ steps.changelog.outputs.changes }}"
             })
-
-            console.log('PAYLOAD: ', context);
 
             github.rest.issues.createComment({
               owner: context.repo.owner,

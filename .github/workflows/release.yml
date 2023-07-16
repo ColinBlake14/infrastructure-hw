@@ -16,24 +16,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      # - name: Generate changelog
-      #   id: changelog
-      #   run: |
-      #     echo "changelog=$(git log --pretty=format:'%h   %s' $(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | grep -e 'v[0-9][0-9]*' | tail -2 | head -1)..${{ github.ref }} | head -1)" >> $GITHUB_OUTPUT
-
-      - name: Get previous tag
-        id: prev_tag
-        run: |
-          echo "TAG=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | grep -e 'v[0-9][0-9]*' | tail -2 | head -1 | sed -E 's/refs\/tags\///')" >> $GITHUB_OUTPUT
-
       - name: Generate changelog
         id: changelog
-        uses: requarks/changelog-action@v1
-        with:
-          token: ${{ github.token }}
-          fromTag: ${{ github.ref_name }}
-          toTag: ${{ steps.prev_tag.outputs.TAG }}
-          includeRefIssues: false
+        run: |
+          echo "changelog=$(git log --pretty=format:'%h   %s'  $(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | grep -e 'v[0-9][0-9]*' | tail -2 | head -1)..${{ github.ref }} | tr '\n' ';')" >> $GITHUB_OUTPUT
 
       - name: Create an issue
         uses: actions/github-script@v6
@@ -81,9 +67,11 @@ jobs:
               issueNumber = result.data.number;
             }
 
-            let changeLog = `${{ steps.changelog.outputs.changes }}`;
+            let changeLog = `${{ steps.changelog.outputs.changelog }}`;
+            console.log('oldCL: ', changeLog);
 
-            console.log(changeLog);
+            changeLog.replaceAll(/\;/, '\n');
+            console.log('newCL: ', changeLog);
 
             github.rest.issues.createComment({
               owner: context.repo.owner,

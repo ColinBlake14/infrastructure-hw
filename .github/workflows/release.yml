@@ -82,7 +82,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: issueNumber,
-              body: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`
+              body: `Workflow run link: \n https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`
             })
   run_check:
     uses: ./.github/workflows/testing.yml
@@ -112,8 +112,6 @@ jobs:
 
             let issueNumber = 0;
 
-            console.log('ISSUES DATA: ', issues.data);
-
             for (const issue of issues.data) {
               if (issue.title === issueName) {
                 issueNumber = issue.number;
@@ -121,12 +119,10 @@ jobs:
               }
             }
 
-            await github.request('PATCH /repos/{owner}/{repo}/issues/13', {
+            await github.request('PATCH /repos/{owner}/{repo}/issues/${issueNumber}', {
               owner: context.repo.owner,
               repo: context.repo.repo,
-              state: 'closed'
+              state: 'closed',
             })
-
-            console.log('RUN_ID: ', context.payload.workflow_run.id);
 
 

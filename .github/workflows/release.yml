@@ -76,6 +76,8 @@ jobs:
               body: "Changelog: \n${{ steps.changelog.outputs.changelog }}"
             })
 
+            console.log('PAYLOAD: ', context.payload);
+
             github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,

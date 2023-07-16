@@ -21,7 +21,7 @@ npm start
 # скачать браузеры
 npx playwright install 
 
-# запустить тесты
+# запустить тесты 
 npm run e2e
 ```
 

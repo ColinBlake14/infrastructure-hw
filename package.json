@@ -1,7 +1,7 @@
 {
     "name": "unit-demo-cra",
     "version": "0.1.0",
-    "homepage": ".",
+    "homepage": "https://github.com/ColinBlake14/infrastructure-hw",
     "private": true,
     "dependencies": {
         "@testing-library/jest-dom": "^5.16.5",
@@ -11,6 +11,7 @@
         "@types/node": "^18.11.9",
         "@types/react": "^18.0.25",
         "@types/react-dom": "^18.0.9",
+        "gh-pages": "^5.0.0",
         "jest-teamcity": "^1.11.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
@@ -28,6 +29,8 @@
     "scripts": {
         "start": "react-scripts start",
         "build": "react-scripts build",
+        "predeploy": "npm run build",
+        "deploy": "gh-pages -d build",
         "eject": "react-scripts eject",
         "test": "react-scripts test",
         "e2e": "playwright test --project=chromium && playwright show-report",

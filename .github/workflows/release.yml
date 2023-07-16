@@ -37,7 +37,7 @@ jobs:
               console.log('release label exists')
             }
             
-            const issueName = context.payload.ref.replace(/\/refs\/tags\//, '');
+            const issueName = context.payload.ref.replace(/refs\/tags\//, '');
             console.log('ISSUE ', issueName);
 
             const issues = await github.request('GET /repos/{owner}/{repo}/issues?labels={labels}', {
@@ -48,10 +48,12 @@ jobs:
 
             console.log(issues)
             let issueExists = false;
+            let issueNumber = 0;
 
             for (const issue of issues.data) {
               if (issue.title === issueName) {
                 issueExists = true;
+                issueNumber = issue.number;
                 break;
               }
             }
@@ -63,11 +65,13 @@ jobs:
                 title: issueName,
                 labels: ["RELEASE"]
               })
+
+              issueNumber = result.data.number;
             }
 
             github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: result.data.number,
+              issue_number: issueNumber,
               body: "Changelog: \n${{ steps.changelog.outputs.changelog }}"
             })

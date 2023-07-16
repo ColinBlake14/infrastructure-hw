@@ -31,8 +31,8 @@ jobs:
         uses: requarks/changelog-action@v1
         with:
           token: ${{ github.token }}
-          fromTag: ${{ steps.prev_tag.outputs.TAG }}
-          toTag: ${{ github.ref_name }}
+          fromTag: ${{ github.ref_name }}
+          toTag: ${{ steps.prev_tag.outputs.TAG }}
 
       - name: Create an issue
         uses: actions/github-script@v6

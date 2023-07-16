@@ -33,6 +33,7 @@ jobs:
           token: ${{ github.token }}
           fromTag: ${{ github.ref_name }}
           toTag: ${{ steps.prev_tag.outputs.TAG }}
+          includeRefIssues: false
 
       - name: Create an issue
         uses: actions/github-script@v6

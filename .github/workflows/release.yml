@@ -117,11 +117,12 @@ jobs:
                 issueNumber = issue.number;
                 break;
               }
-            }
+            } 
 
-            console.log("ISSUE NUMBER: ", issueNumber);    
-
-            await github.request('PATCH /repos/{owner}/{repo}/issues/${issueNumber}', {
+            await github.request('PATCH /repos/{owner}/{repo}/issues/{issue_number}', {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
               state: 'closed',
             })
 

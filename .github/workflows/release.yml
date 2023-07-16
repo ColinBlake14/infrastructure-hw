@@ -38,6 +38,7 @@ jobs:
             }
             
             const issueName = github.ref;
+            console.log('ISSUE ', issueName);
 
             const issues = await github.request('GET /repos/{owner}/{repo}/issues?labels={labels}', {
               owner: context.repo.owner,

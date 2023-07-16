@@ -6,8 +6,8 @@ on:
       - 'v[0-9]+'
 
 jobs:
-  release:
-    name: Run release
+  issue:
+    name: Issue creator
     runs-on: ubuntu-20.04
     permissions: write-all
     steps:
@@ -75,3 +75,5 @@ jobs:
               issue_number: issueNumber,
               body: "Changelog: \n${{ steps.changelog.outputs.changelog }}"
             })
+  run_check:
+    uses: ./.github/workflows/testing.yml

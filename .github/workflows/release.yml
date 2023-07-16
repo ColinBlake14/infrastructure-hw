@@ -76,13 +76,52 @@ jobs:
               body: "Changelog: \n${{ steps.changelog.outputs.changelog }}"
             })
 
-            console.log('PAYLOAD: ', context.payload);
+            console.log('PAYLOAD: ', context);
 
             github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: issueNumber,
-              body: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.payload.run_id}`
+              body: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/5568305154`
             })
   run_check:
     uses: ./.github/workflows/testing.yml
+  release:
+    name: Release on GH-Pages
+    needs: [issue, run_check]
+    runs-on: ubuntu-20.04
+    permissions: write-all
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Close an issue
+        uses: actions/github-script@v6
+        with:
+          result-encoding: string
+          retries: 3
+          script: |
+            const issues = await github.request('GET /repos/{owner}/{repo}/issues?labels={labels}', {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ["RELEASE"]
+            })
+
+            console.log(issues);
+            let issueNumber = 0;
+
+            for (const issue of issues.data) {
+              if (issue.title === issueName) {
+                issueNumber = issue.number;
+                break;
+              }
+            }
+
+            await github.request('PATCH /repos/{owner}/{repo}/issues', {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'closed'
+            })
+
+

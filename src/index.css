@@ -6,6 +6,10 @@ input,
 a {
     margin-right: 8px;
 }
+input {
+    border-radius: 3px;
+    border: 1px solid grey;
+}
 
 .done {
     text-decoration: line-through;
